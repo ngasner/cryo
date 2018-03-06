@@ -1,0 +1,44 @@
+img = scipy.misc.imread('mgtest.png',1)
+plt.imshow(img, cmap='gray')
+
+mask = np.zeros_like(img)
+mask[1260:1350, 1030:1120] = 255
+
+masked = mask*img
+plt.imshow(masked, cmap = 'gray')
+plt.xlim(1030,1120)
+plt.ylim(1350,1260)
+
+arr = np.nonzero(masked)
+print(arr)
+print(arr[0][0])
+b = masked[arr[0][0]:arr[0][-1],arr[1][0]:arr[1][-1]]
+#b -= np.mean(b)
+plt.figure()
+plt.imshow(b,cmap = 'gray')
+
+p = np.zeros_like(img)
+[height,length] = p.shape
+[bheight,blength] = b.shape
+x = int(height/2-bheight/2)
+y = int(length/2-blength/2)
+
+p[x:x+int(b.shape[0]),y:y+int(b.shape[1])] = b
+mask_im = np.zeros_like(p)
+mask_im[x:x+int(b.shape[0]),y:y+int(b.shape[1])] = 1.0
+
+plt.figure()
+plt.imshow(p,cmap = 'gray')
+
+
+num = scipy.signal.fftconvolve(img,b[::-1,::-1],'same')
+denom1 = np.sqrt(scipy.signal.fftconvolve(img**2,mask_im,'same'))
+denom2 = np.sqrt(np.sum(b**2))
+
+plt.figure()
+plt.imshow(num/(denom1*denom2),cmap = 'gray')
+plt.colorbar()
+
+box = np.ones_like(b)
+plt.figure()
+plt.imshow(box,cmap = 'gray')
