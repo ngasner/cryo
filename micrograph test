@@ -22,6 +22,7 @@ b = masked[arr[0][0]:arr[0][-1],arr[1][0]:arr[1][-1]]
 plt.figure()
 plt.imshow(b,cmap = 'gray')
 
+[height,length] = img.shape
 [bheight,blength] = b.shape
 x = int(height/2-bheight/2)
 y = int(length/2-blength/2)
